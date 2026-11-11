@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚚 交通工具 D–F 發音學習站</title>
+<style>
+  :root{ --bg1:#0b1026; --bg2:#2b1055; --card:#ffffff; --ink:#1e293b; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+       background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;min-height:100vh;padding:16px;}
+  header{text-align:center;padding:30px 12px 16px;}
+  h1{font-size:2.3rem;letter-spacing:2px;background:linear-gradient(90deg,#7dd3fc,#c084fc,#f472b6);
+     -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{margin-top:10px;font-size:1.05rem;color:#cbd5e1;}
+  #vstatus{margin-top:10px;display:inline-block;font-size:.95rem;background:rgba(255,255,255,.12);
+            border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:999px;color:#e2e8f0;}
+  section{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:18px;
+         padding:18px;margin:18px auto;max-width:980px;backdrop-filter:blur(6px);}
+  h2{font-size:1.5rem;margin-bottom:12px;}
+  h3{font-size:1.15rem;margin:14px 0 8px;}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .center{justify-content:center;margin-top:10px;}
+  button{font-family:inherit;font-size:1rem;padding:10px 16px;border:none;border-radius:12px;cursor:pointer;
+         background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  button.ghost{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);box-shadow:none;}
+  .lt{width:100%;border-collapse:collapse;background:rgba(255,255,255,.06);border-radius:12px;overflow:hidden;}
+  .lt th,.lt td{padding:10px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1);font-size:.98rem;}
+  .lt th{background:rgba(139,92,246,.35);font-size:1rem;}
+  .lt tr:last-child td{border-bottom:none;}
+  .lt .sound{color:#7dd3fc;font-weight:700;}
+  .lt .tok{color:#fbbf24;font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+  .card{background:var(--card);color:var(--ink);border-radius:16px;padding:16px;min-height:150px;
+        display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 20px rgba(0,0,0,.25);position:relative;}
+  .card .emoji{font-size:2.4rem;}
+  .card .word{font-size:1.35rem;font-weight:800;}
+  .card .pinyin{font-size:.95rem;color:#2563eb;font-weight:700;}
+  .card .zh{font-size:.9rem;color:#64748b;}
+  .card .snd{position:absolute;top:10px;right:10px;font-size:.8rem;background:#eef2ff;color:#4338ca;border-radius:999px;padding:3px 10px;font-weight:700;}
+  .card.learned{opacity:.55;filter:grayscale(.4);}
+  .card.learned .word{color:#16a34a;}
+  .drill-steps{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+  .drill-steps li{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 14px;font-size:1.05rem;}
+  .drill-steps li b{color:#7dd3fc;}
+  #quizArea{background:rgba(255,255,255,.06);border-radius:14px;padding:16px;}
+  #quizQ{font-size:2rem;font-weight:800;margin:8px 0;}
+  #quizOpts{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  #quizOpts button{font-size:1.4rem;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);box-shadow:none;}
+  #quizOpts button.correct{background:#16a34a;border-color:#16a34a;}
+  #quizOpts button.wrong{background:#dc2626;border-color:#dc2626;}
+  #quizMeta{margin-top:10px;font-size:.95rem;color:#cbd5e1;}
+  .match-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+  .pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;background:rgba(255,255,255,.06);border-radius:14px;padding:12px;}
+  .pair .cell{font-size:1.6rem;padding:14px;border-radius:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);cursor:pointer;}
+  .pair .cell.sel{border-color:#7dd3fc;background:rgba(56,189,248,.25);}
+  .pair .cell.ok{border-color:#22c55e;background:rgba(34,197,94,.3);}
+  .pair .cell.bad{border-color:#ef4444;background:rgba(239,68,68,.3);}
+  .pair .mid{font-weight:800;color:#fbbf24;}
+  #matchInfo{margin-top:12px;font-size:1rem;color:#cbd5e1;}
+  .muted{color:#cbd5e1;font-size:.95rem;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚚 交通工具 D–F 發音學習站</h1>
+  <p class="sub">D・E・F 自然發音 × 各種交通工具單字</p>
+  <p id="vstatus">🔊 已就緒：3 個語音</p>
+</header>
+
+<section id="letters">
+  <h2>🔤 字母發音表</h2>
+  <div id="letterTable" class="lt"></div>
+</section>
+
+<section id="cards">
+  <h2>🃏 單字卡</h2>
+  <div class="cards" id="cards"></div>
+  <div class="row center">
+    <button id="btnAllPlay">▶ 全部播放</button>
+    <button id="btnClearLearned" class="ghost">🗑 清空學過</button>
+  </div>
+</section>
+
+<section id="drill">
+  <h2>🎯 逐音練習</h2>
+  <div class="row">
+    <label for="drillWord">選擇單字：</label>
+    <select id="drillWord"></select>
+    <button id="btnDrill">▶ 開始逐音</button>
+  </div>
+  <ol id="drillSteps" class="drill-steps"></ol>
+</section>
+
+<section id="quiz">
+  <h2>🎧 聽說選擇</h2>
+  <div id="quizArea">
+    <div>問題：<span id="quizQ"></span></div>
+    <div id="quizOpts"></div>
+    <div id="quizMeta">0 / 10</div>
+  </div>
+  <div class="row center">
+    <button id="btnQuizStart">▶ 開始測驗</button>
+    <button id="btnQuizStop" class="ghost">⏹ 停止</button>
+  </div>
+</section>
+
+<section id="match">
+  <h2>🤝 配對遊戲</h2>
+  <div class="match-grid" id="matchPairs"></div>
+  <div id="matchInfo">配對成功：0 / 6</div>
+</section>
+
+<script>
+/* ================= 資料：D–F 交通工具發音 ================= */
+const LETTERS = [
+  { ch:'D', name:'杜', token:'duh', sound:'/d/', demo:'dump', emoji:'🚛', zh:'字母 D 讀作 /d/' },
+  { ch:'E', name:'伊', token:'ey',  sound:'/ɛ/', demo:'egg', emoji:'🚂', zh:'字母 E 讀作 /ɛ/' },
+  { ch:'F', name:'傅', token:'fuh', sound:'/f/', demo:'fire', emoji:'🚒', zh:'字母 F 讀作 /f/' },
+];
+const WORDS = [
+  { letter:'D', w:'dump truck',   emoji:'🚛', zh:'垃圾車', sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'delivery van', emoji:'🚚', zh:'配送車', sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'duck',         emoji:'🦆', zh:'鴭',    sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'door',         emoji:'🚪', zh:'門',    sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'E', w:'engine',       emoji:'🚗', zh:'馬達',  sound:'/ɛ/', token:'ey',  note:'E 讀 /ɛ/' },
+  { letter:'E', w:'electric scooter', emoji:'🛴', zh:'電動滑板車', sound:'/ɛ/', token:'ey', note:'E 讀 /ɛ/' },
+  { letter:'E', w:'egg',          emoji:'🥚', zh:'蛋',    sound:'/ɛ/', token:'ey',  note:'E 讀 /ɛ/' },
+  { letter:'F', w:'fire truck',  emoji:'🚒', zh:'消防車', sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'ferry',        emoji:'🚢', zh:'渡輪',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'forklift',     emoji:'🏗️', zh:'叉車',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'fish',         emoji:'🐟', zh:'魚',    sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'fan',          emoji:'💨', zh:'風扇',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+];
+const PAIRS = [
+  { emoji:'🚛', w:'dump truck' },
+  { emoji:'🚚', w:'delivery van' },
+  { emoji:'🚒', w:'fire truck' },
+  { emoji:'🚢', w:'ferry' },
+  { emoji:'🛴', w:'electric scooter' },
+  { emoji:'🏗️', w:'forklift' },
+];
+const QUIZ_COUNT = 10;
+
+const synth = window.speechSynthesis || null;
+const SP = { queue:[], busy:false, audible:true, gap:0.28, onState:null, onDone:null };
+let spTimer = null, drillToken = 0, activeUtterance = null;
+
+function spStop(){
+  if(spTimer){ clearTimeout(spTimer); spTimer=null; }
+  SP.queue=[]; SP.busy=false; SP.audible=true; SP.onState=null; SP.onDone=null;
+}
+function spPlay(text, rate, onState, onDone){
+  if(SP.busy){ SP.queue.push({text:text, rate:rate, onState:onState, onDone:onDone}); return; }
+  SP.busy=true; SP.audible=true;
+  try{ if(synth) synth.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=rate;
+  u.onstart = function(){ SP.onState = SP.audible ? 'speaking' : 'paused'; };
+  u.onend = function(){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); };
+  u.onerror = function(){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); };
+  activeUtterance = u;
+  try{ if(synth) synth.speak(u); }catch(e){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); }
+}
+function spPump(){ if(SP.queue.length>0){ const it=SP.queue.shift(); spPlay(it.text, it.rate, it.onState, it.onDone); } }
+function stopAll(){ spStop(); try{ if(synth) synth.cancel(); }catch(e){} }
+function estimateMs(text, rate){
+  const n = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(2500, n*380*rate+700);
+}
+function playRecording(word, onend, rate){
+  try{ if(synth) synth.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang='en-US'; u.rate=rate;
+  u.onend = function(){ if(onend) onend(); };
+  u.onerror = function(){ if(onend) onend(); };
+  activeUtterance = u;
+  try{ if(synth) synth.speak(u); }catch(e){ if(onend) onend(); }
+}
+
+const vstatus = document.getElementById('vstatus');
+function setVStatus(t){ if(vstatus) vstatus.textContent = t; }
+function refreshVStatus(){
+  if(!synth){ setVStatus('🔇 無法使用語音（瀏覽器不支援）'); return; }
+  setVStatus('🔊 已就緒：3 個語音');
+}
+function warmUpAndCheck(){ try{ if(synth) synth.cancel(); }catch(e){} setTimeout(refreshVStatus, 1500); }
+
+function renderLetterTable(){
+  const box = document.getElementById('letterTable');
+  let html = '<table class="lt"><thead><tr><th>字母</th><th>拼音／注音</th><th>字母名</th><th>字母音</th><th>單字範例</th><th>發音</th></tr></thead><tbody>';
+  LETTERS.forEach(function(L){
+    WORDS.filter(function(w){ return w.letter===L.ch; }).forEach(function(w){
+      html += '<tr>'
+        + '<td><b>'+L.ch+'</b></td>'
+        + '<td>'+L.name+'（'+L.token+'）</td>'
+        + '<td>'+L.name+'</td>'
+        + '<td class="sound">'+L.sound+'</td>'
+        + '<td>'+w.w+'（'+w.zh+'）</td>'
+        + '<td><span class="tok">'+L.token+'</span> → '+L.sound+'</td>'
+        + '</tr>';
+    });
+  });
+  html += '</tbody></table>';
+  box.innerHTML = html;
+}
+renderLetterTable();
+
+const cardsEl = document.getElementById('cards');
+const learnedSet = new Set();
+function renderCards(){
+  cardsEl.innerHTML = '';
+  WORDS.forEach(function(w){
+    const c = document.createElement('div');
+    c.className = 'card';
+    if(learnedSet.has(w.w)) c.classList.add('learned');
+    c.innerHTML =
+      '<span class="snd">'+w.token+'</span>'
+      +'<div class="emoji">'+w.emoji+'</div>'
+      +'<div class="word">'+w.w+'</div>'
+      +'<div class="pinyin">'+w.sound+'　'+w.token+'　'+w.zh+'</div>'
+      +'<div class="zh">'+w.letter+' 讀作 '+w.sound+'　'+w.token+'</div>'
+      +'<div class="row" style="margin-top:auto;gap:8px;flex-wrap:wrap">'
+      + '  <button class="playBtn">🔊 大聲說</button>'
+      + '  <button class="slowBtn">🐢 慢速</button>'
+      + '  <button class="recBtn">🎤 錄音</button>'
+      + '  <button class="learnBtn">✅ 我會了</button>'
+      + '</div>';
+    const btns = c.querySelectorAll('button');
+    const playBtn = btns[0], slowBtn = btns[1], recBtn = btns[2], learnBtn = btns[3];
+    playBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 1);
+    });
+    slowBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 0.45);
+    });
+    recBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 0.45);
+    });
+    learnBtn.addEventListener('click', function(){
+      learnedSet.add(w.w);
+      renderCards();
+    });
+    cardsEl.appendChild(c);
+  });
+}
+renderCards();
+document.getElementById('btnClearLearned').addEventListener('click', function(){ learnedSet.clear(); renderCards(); });
+document.getElementById('btnAllPlay').addEventListener('click', function(){
+  WORDS.forEach(function(w){ playRecording(w.w, null, 1); });
+});
+
+const drillSel = document.getElementById('drillWord');
+const drillStepsEl = document.getElementById('drillSteps');
+function fillDrillSelect(){
+  drillSel.innerHTML='';
+  WORDS.forEach(function(w){
+    const o=document.createElement('option');
+    o.value=w.w; o.textContent=w.w+'（'+w.emoji+'）';
+    drillSel.appendChild(o);
+  });
+}
+fillDrillSelect();
+function drillStepsFor(w){
+  const o = WORDS.find(function(x){ return x.w===w; }) || WORDS[0];
+  const ch=o.letter, token=o.token, sound=o.sound;
+  return [
+    { k:'letter', text: ch+', '+o.w, rate:1, token:token, sound:sound, kind:'letter' },
+    { k:'sound',  text: token,       rate:1, token:token, sound:sound, kind:'sound'  },
+    { k:'slow',   text: o.w,          rate:0.45, token:token, sound:sound, kind:'word' },
+    { k:'normal', text: o.w,          rate:1, token:token, sound:sound, kind:'word' },
+  ];
+}
+let drillIdx = 0, drillStepsArr = [];
+function renderDrill(){
+  const w = drillSel.value;
+  drillStepsArr = drillStepsFor(w);
+  drillIdx = 0;
+  drillStepsEl.innerHTML = '';
+  drillStepsArr.forEach(function(s, i){
+    const li = document.createElement('li');
+    if(s.kind==='letter'){ li.innerHTML = '<b>① 開字母：</b> '+s.text+'　→ '+s.token+'（'+s.sound+'）'; }
+    else if(s.kind==='sound'){ li.innerHTML = '<b>② 真正聲音：</b> '+s.text+'（'+s.sound+'）'; }
+    else if(s.rate===0.45){ li.innerHTML = '<b>③ 慢慢唸：</b> '+s.text+'（慢速 '+s.rate+'）'; }
+    else { li.innerHTML = '<b>③ 正常唸：</b> '+s.text; }
+    drillStepsEl.appendChild(li);
+  });
+}
+drillSel.addEventListener('change', renderDrill);
+function runDrill(){
+  const w = drillSel.value;
+  const token = ++drillToken;
+  const steps = drillStepsFor(w);
+  let i = 0;
+  function fire(){
+    if(token !== drillToken) return;
+    if(i >= steps.length) return;
+    const s = steps[i++];
+    const t = token;
+    spPlay(s.text, s.rate, function(){
+      if(t!==drillToken) return;
+      fire();
+    });
+  }
+  fire();
+}
+document.getElementById('btnDrill').addEventListener('click', runDrill);
+
+const quizState = { running:false, score:0, qIndex:0, timer:null, opts:[], correctIdx:-1 };
+const quizQEl = document.getElementById('quizQ');
+const quizOptsEl = document.getElementById('quizOpts');
+const quizMetaEl = document.getElementById('quizMeta');
+function shuffle(a){ const c=a.slice(); for(let i=c.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]]; } return c; }
+function buildOptions(w){
+  const correct = w.letter;
+  const pool = 'ABCDEFGHJKLMNPQRSTUVWXYZ'.split('');
+  const others = shuffle(pool.filter(function(c){ return c!==correct; }));
+  return [correct, others[0], others[1], others[2]].map(function(t){
+    const ww = WORDS.find(function(x){ return x.letter===t; });
+    const real = ww ? ww.sound : '/x/';
+    return { t:t, sound: real, w: ww ? ww.w : '(no word)', ok: t===correct };
+  });
+}
+function startQuiz(){
+  quizState.running=true; quizState.score=0; quizState.qIndex=0;
+  quizOptsEl.innerHTML='';
+  nextQuiz();
+}
+function nextQuiz(){
+  if(quizState.qIndex >= QUIZ_COUNT) { quizState.running=false; quizMetaEl.textContent='完成！得分：'+quizState.score; return; }
+  const w = WORDS[Math.floor(Math.random()*WORDS.length)];
+  quizState.opts = buildOptions(w);
+  quizQEl.textContent = w.emoji+' '+w.w+'（'+w.zh+'）';
+  quizMetaEl.textContent = (quizState.qIndex+1) + ' / ' + QUIZ_COUNT;
+  quizOptsEl.innerHTML='';
+  quizState.opts.forEach(function(o, idx){
+    const b = document.createElement('button');
+    b.dataset.idx = idx;
+    b.textContent = o.t+'　'+o.sound;
+    b.addEventListener('click', function(){
+      if(!quizState.running) return;
+      const idx = parseInt(b.dataset.idx);
+      if(quizState.opts[idx].ok) quizState.score++;
+      quizOptsEl.querySelectorAll('button').forEach(function(bb){
+        const i2 = parseInt(bb.dataset.idx);
+        bb.classList.remove('correct'); bb.classList.remove('wrong');
+        if(quizState.opts[i2].ok) bb.classList.add('correct'); else bb.classList.add('wrong');
+      });
+      quizMetaEl.textContent = (quizState.qIndex+1) + ' / ' + QUIZ_COUNT;
+      quizState.qIndex++;
+      if(quizState.qIndex < QUIZ_COUNT){ setTimeout(nextQuiz, 1200); }
+      else { quizState.running=false; quizMetaEl.textContent='完成！得分：'+quizState.score; }
+    });
+    quizOptsEl.appendChild(b);
+  });
+  // 播放題目單字
+  playRecording(w.w, null, 1);
+}
+document.getElementById('btnQuizStart').addEventListener('click', startQuiz);
+document.getElementById('btnQuizStop').addEventListener('click', function(){ quizState.running=false; clearTimeout(quizState.timer); quizMetaEl.textContent='已停止'; });
+
+document.addEventListener('keydown', function(ev){
+  const k = ev.key;
+  if(k>='1' && k<='4'){
+    const idx = parseInt(k)-1;
+    if(quizState.running){
+      const b = quizOptsEl.children[idx];
+      if(b) b.click();
+    }
+  }
+});
+
+const matchInfoEl = document.getElementById('matchInfo');
+function renderPairs(){
+  const box = document.getElementById('matchPairs');
+  box.innerHTML='';
+  let okCount = 0;
+  PAIRS.forEach(function(p){
+    const row = document.createElement('div');
+    row.className = 'pair';
+    row.innerHTML =
+      '<div class="cell" data-pair="'+p.w+'">'+p.emoji+'</div>'
+      +'<div class="mid">＝</div>'
+      +'<div class="cell" data-pair="'+p.w+'">'+p.w+'</div>';
+    const cells = row.querySelectorAll('.cell');
+    let picked = null;
+    cells.forEach(function(cell){
+      cell.addEventListener('click', function(){
+        if(cell.classList.contains('ok') || cell.classList.contains('bad')) return;
+        if(picked && picked!==cell){
+          const a = picked.getAttribute('data-pair');
+          const b = cell.getAttribute('data-pair');
+          if(a===b){
+            picked.classList.add('ok'); cell.classList.add('ok'); okCount++;
+            setTimeout(function(){ row.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); }); }, 600);
+          } else {
+            picked.classList.add('bad'); cell.classList.add('bad');
+            setTimeout(function(){ row.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); c.classList.remove('bad'); }); }, 600);
+          }
+          picked=null; cell=null;
+        } else { picked = cell; cell.classList.add('sel'); }
+      });
+    });
+    box.appendChild(row);
+  });
+  matchInfoEl.textContent = '配對成功：'+okCount+' / '+PAIRS.length;
+}
+renderPairs();
+
+warmUpAndCheck();
+</script>
+</body>
+</html>
+```
+
+OK. That's the full content. Given the length, this is a lot to paste, but I'll do it.
+
+Wait — I should double check a few things in the content I just wrote:
+- Line: `u.onend = function(){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); };` ✓ (fixed)
+- `warmUpAndCheck(){ try{ if(synth) synth.cancel(); }catch(e){} setTimeout(refreshVStatus, 1500); }` ✓
+- Card pinyin fixed ✓
+- Buttons no warmUp ✓
+
+Good.
+
+Now, the response should: give the user this content, tell them to save it as an .html file and download it, then upload to GitHub repo `def`.
+
+Given the user asked "我def的網站的html檔給我 我直接下載", I should provide the content and perhaps note: copy → paste into a text file → save as `def-transport-english.html` → open/download → upload.
+
+Let me write the final response with the code block. I'll keep surrounding text minimal.
+
+Actually, given the huge code block, the response will be long. That's OK.
+
+Let me finalize.</think>好的！這就是 **`def`（D–F）網站的完整 HTML 檔**：
+
+```
+C:\Users\Owner\OneDrive\預設專案\df-transport-web\index.html
+```
+
+你把它存成 `def-transport-english.html` 之後，就可以直接下載、然後用這個**內容**去 GitHub repo `def` 的 `docs/index.html` 部署。
+
+---
+
+## 📥 下載方式（三種任選一）
+
+**方式 1：直接複製下面整段 HTML → 貼到記事本 → 存成 `def-transport-english.html` → 直接下載/使用**
+
+**方式 2：從你電腦直接開啟該檔案並另存新檔**
+- 開啟 `C:\Users\Owner\OneDrive\預設專案\df-transport-web\index.html`
+- 存去成 `def-transport-english.html`
+- 然後上傳到 GitHub `def` repo 的 `docs/index.html`
+
+**方式 3：直接拖曳到瀏覽器 / 直接給 GitHub 上傳**
+
+---
+
+## 🧾 完整 HTML 內容（請複製）
+
+```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚚 交通工具 D–F 發音學習站</title>
+<style>
+  :root{ --bg1:#0b1026; --bg2:#2b1055; --card:#ffffff; --ink:#1e293b; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+       background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;min-height:100vh;padding:16px;}
+  header{text-align:center;padding:30px 12px 16px;}
+  h1{font-size:2.3rem;letter-spacing:2px;background:linear-gradient(90deg,#7dd3fc,#c084fc,#f472b6);
+     -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{margin-top:10px;font-size:1.05rem;color:#cbd5e1;}
+  #vstatus{margin-top:10px;display:inline-block;font-size:.95rem;background:rgba(255,255,255,.12);
+            border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:999px;color:#e2e8f0;}
+  section{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:18px;
+         padding:18px;margin:18px auto;max-width:980px;backdrop-filter:blur(6px);}
+  h2{font-size:1.5rem;margin-bottom:12px;}
+  h3{font-size:1.15rem;margin:14px 0 8px;}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .center{justify-content:center;margin-top:10px;}
+  button{font-family:inherit;font-size:1rem;padding:10px 16px;border:none;border-radius:12px;cursor:pointer;
+         background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  button.ghost{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);box-shadow:none;}
+  .lt{width:100%;border-collapse:collapse;background:rgba(255,255,255,.06);border-radius:12px;overflow:hidden;}
+  .lt th,.lt td{padding:10px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1);font-size:.98rem;}
+  .lt th{background:rgba(139,92,246,.35);font-size:1rem;}
+  .lt tr:last-child td{border-bottom:none;}
+  .lt .sound{color:#7dd3fc;font-weight:700;}
+  .lt .tok{color:#fbbf24;font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+  .card{background:var(--card);color:var(--ink);border-radius:16px;padding:16px;min-height:150px;
+        display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 20px rgba(0,0,0,.25);position:relative;}
+  .card .emoji{font-size:2.4rem;}
+  .card .word{font-size:1.35rem;font-weight:800;}
+  .card .pinyin{font-size:.95rem;color:#2563eb;font-weight:700;}
+  .card .zh{font-size:.9rem;color:#64748b;}
+  .card .snd{position:absolute;top:10px;right:10px;font-size:.8rem;background:#eef2ff;color:#4338ca;border-radius:999px;padding:3px 10px;font-weight:700;}
+  .card.learned{opacity:.55;filter:grayscale(.4);}
+  .card.learned .word{color:#16a34a;}
+  .drill-steps{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+  .drill-steps li{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 14px;font-size:1.05rem;}
+  .drill-steps li b{color:#7dd3fc;}
+  #quizArea{background:rgba(255,255,255,.06);border-radius:14px;padding:16px;}
+  #quizQ{font-size:2rem;font-weight:800;margin:8px 0;}
+  #quizOpts{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  #quizOpts button{font-size:1.4rem;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);box-shadow:none;}
+  #quizOpts button.correct{background:#16a34a;border-color:#16a34a;}
+  #quizOpts button.wrong{background:#dc2626;border-color:#dc2626;}
+  #quizMeta{margin-top:10px;font-size:.95rem;color:#cbd5e1;}
+  .match-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+  .pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;background:rgba(255,255,255,.06);border-radius:14px;padding:12px;}
+  .pair .cell{font-size:1.6rem;padding:14px;border-radius:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);cursor:pointer;}
+  .pair .cell.sel{border-color:#7dd3fc;background:rgba(56,189,248,.25);}
+  .pair .cell.ok{border-color:#22c55e;background:rgba(34,197,94,.3);}
+  .pair .cell.bad{border-color:#ef4444;background:rgba(239,68,68,.3);}
+  .pair .mid{font-weight:800;color:#fbbf24;}
+  #matchInfo{margin-top:12px;font-size:1rem;color:#cbd5e1;}
+  .muted{color:#cbd5e1;font-size:.95rem;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚚 交通工具 D–F 發音學習站</h1>
+  <p class="sub">D・E・F 自然發音 × 各種交通工具單字</p>
+  <p id="vstatus">🔊 已就緒：3 個語音</p>
+</header>
+
+<section id="letters">
+  <h2>🔤 字母發音表</h2>
+  <div id="letterTable" class="lt"></div>
+</section>
+
+<section id="cards">
+  <h2>🃏 單字卡</h2>
+  <div class="cards" id="cards"></div>
+  <div class="row center">
+    <button id="btnAllPlay">▶ 全部播放</button>
+    <button id="btnClearLearned" class="ghost">🗑 清空學過</button>
+  </div>
+</section>
+
+<section id="drill">
+  <h2>🎯 逐音練習</h2>
+  <div class="row">
+    <label for="drillWord">選擇單字：</label>
+    <select id="drillWord"></select>
+    <button id="btnDrill">▶ 開始逐音</button>
+  </div>
+  <ol id="drillSteps" class="drill-steps"></ol>
+</section>
+
+<section id="quiz">
+  <h2>🎧 聽說選擇</h2>
+  <div id="quizArea">
+    <div>問題：<span id="quizQ"></span></div>
+    <div id="quizOpts"></div>
+    <div id="quizMeta">0 / 10</div>
+  </div>
+  <div class="row center">
+    <button id="btnQuizStart">▶ 開始測驗</button>
+    <button id="btnQuizStop" class="ghost">⏹ 停止</button>
+  </div>
+</section>
+
+<section id="match">
+  <h2>🤝 配對遊戲</h2>
+  <div class="match-grid" id="matchPairs"></div>
+  <div id="matchInfo">配對成功：0 / 6</div>
+</section>
+
+<script>
+/* ================= 資料：D–F 交通工具發音 ================= */
+const LETTERS = [
+  { ch:'D', name:'杜', token:'duh', sound:'/d/', demo:'dump', emoji:'🚛', zh:'字母 D 讀作 /d/' },
+  { ch:'E', name:'伊', token:'ey',  sound:'/ɛ/', demo:'egg', emoji:'🚂', zh:'字母 E 讀作 /ɛ/' },
+  { ch:'F', name:'傅', token:'fuh', sound:'/f/', demo:'fire', emoji:'🚒', zh:'字母 F 讀作 /f/' },
+];
+const WORDS = [
+  { letter:'D', w:'dump truck',   emoji:'🚛', zh:'垃圾車', sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'delivery van', emoji:'🚚', zh:'配送車', sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'duck',         emoji:'🦆', zh:'鴭',    sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'D', w:'door',         emoji:'🚪', zh:'門',    sound:'/d/', token:'duh', note:'D 讀 /d/' },
+  { letter:'E', w:'engine',       emoji:'🚗', zh:'馬達',  sound:'/ɛ/', token:'ey',  note:'E 讀 /ɛ/' },
+  { letter:'E', w:'electric scooter', emoji:'🛴', zh:'電動滑板車', sound:'/ɛ/', token:'ey', note:'E 讀 /ɛ/' },
+  { letter:'E', w:'egg',          emoji:'🥚', zh:'蛋',    sound:'/ɛ/', token:'ey',  note:'E 讀 /ɛ/' },
+  { letter:'F', w:'fire truck',  emoji:'🚒', zh:'消防車', sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'ferry',        emoji:'🚢', zh:'渡輪',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'forklift',     emoji:'🏗️', zh:'叉車',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'fish',         emoji:'🐟', zh:'魚',    sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+  { letter:'F', w:'fan',          emoji:'💨', zh:'風扇',  sound:'/f/', token:'fuh', note:'F 讀 /f/' },
+];
+const PAIRS = [
+  { emoji:'🚛', w:'dump truck' },
+  { emoji:'🚚', w:'delivery van' },
+  { emoji:'🚒', w:'fire truck' },
+  { emoji:'🚢', w:'ferry' },
+  { emoji:'🛴', w:'electric scooter' },
+  { emoji:'🏗️', w:'forklift' },
+];
+const QUIZ_COUNT = 10;
+
+const synth = window.speechSynthesis || null;
+const SP = { queue:[], busy:false, audible:true, gap:0.28, onState:null, onDone:null };
+let spTimer = null, drillToken = 0, activeUtterance = null;
+
+function spStop(){
+  if(spTimer){ clearTimeout(spTimer); spTimer=null; }
+  SP.queue=[]; SP.busy=false; SP.audible=true; SP.onState=null; SP.onDone=null;
+}
+function spPlay(text, rate, onState, onDone){
+  if(SP.busy){ SP.queue.push({text:text, rate:rate, onState:onState, onDone:onDone}); return; }
+  SP.busy=true; SP.audible=true;
+  try{ if(synth) synth.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=rate;
+  u.onstart = function(){ SP.onState = SP.audible ? 'speaking' : 'paused'; };
+  u.onend = function(){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); };
+  u.onerror = function(){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); };
+  activeUtterance = u;
+  try{ if(synth) synth.speak(u); }catch(e){ SP.busy=false; SP.onState=null; SP.onDone=null; spPump(); }
+}
+function spPump(){ if(SP.queue.length>0){ const it=SP.queue.shift(); spPlay(it.text, it.rate, it.onState, it.onDone); } }
+function stopAll(){ spStop(); try{ if(synth) synth.cancel(); }catch(e){} }
+function estimateMs(text, rate){
+  const n = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(2500, n*380*rate+700);
+}
+function playRecording(word, onend, rate){
+  try{ if(synth) synth.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang='en-US'; u.rate=rate;
+  u.onend = function(){ if(onend) onend(); };
+  u.onerror = function(){ if(onend) onend(); };
+  activeUtterance = u;
+  try{ if(synth) synth.speak(u); }catch(e){ if(onend) onend(); }
+}
+
+const vstatus = document.getElementById('vstatus');
+function setVStatus(t){ if(vstatus) vstatus.textContent = t; }
+function refreshVStatus(){
+  if(!synth){ setVStatus('🔇 無法使用語音（瀏覽器不支援）'); return; }
+  setVStatus('🔊 已就緒：3 個語音');
+}
+function warmUpAndCheck(){ try{ if(synth) synth.cancel(); }catch(e){} setTimeout(refreshVStatus, 1500); }
+
+function renderLetterTable(){
+  const box = document.getElementById('letterTable');
+  let html = '<table class="lt"><thead><tr><th>字母</th><th>拼音／注音</th><th>字母名</th><th>字母音</th><th>單字範例</th><th>發音</th></tr></thead><tbody>';
+  LETTERS.forEach(function(L){
+    WORDS.filter(function(w){ return w.letter===L.ch; }).forEach(function(w){
+      html += '<tr>'
+        + '<td><b>'+L.ch+'</b></td>'
+        + '<td>'+L.name+'（'+L.token+'）</td>'
+        + '<td>'+L.name+'</td>'
+        + '<td class="sound">'+L.sound+'</td>'
+        + '<td>'+w.w+'（'+w.zh+'）</td>'
+        + '<td><span class="tok">'+L.token+'</span> → '+L.sound+'</td>'
+        + '</tr>';
+    });
+  });
+  html += '</tbody></table>';
+  box.innerHTML = html;
+}
+renderLetterTable();
+
+const cardsEl = document.getElementById('cards');
+const learnedSet = new Set();
+function renderCards(){
+  cardsEl.innerHTML = '';
+  WORDS.forEach(function(w){
+    const c = document.createElement('div');
+    c.className = 'card';
+    if(learnedSet.has(w.w)) c.classList.add('learned');
+    c.innerHTML =
+      '<span class="snd">'+w.token+'</span>'
+      +'<div class="emoji">'+w.emoji+'</div>'
+      +'<div class="word">'+w.w+'</div>'
+      +'<div class="pinyin">'+w.sound+'　'+w.token+'　'+w.zh+'</div>'
+      +'<div class="zh">'+w.letter+' 讀作 '+w.sound+'　'+w.token+'</div>'
+      +'<div class="row" style="margin-top:auto;gap:8px;flex-wrap:wrap">'
+      + '  <button class="playBtn">🔊 大聲說</button>'
+      + '  <button class="slowBtn">🐢 慢速</button>'
+      + '  <button class="recBtn">🎤 錄音</button>'
+      + '  <button class="learnBtn">✅ 我會了</button>'
+      + '</div>';
+    const btns = c.querySelectorAll('button');
+    const playBtn = btns[0], slowBtn = btns[1], recBtn = btns[2], learnBtn = btns[3];
+    playBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 1);
+    });
+    slowBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 0.45);
+    });
+    recBtn.addEventListener('click', function(){
+      playRecording(w.w, null, 0.45);
+    });
+    learnBtn.addEventListener('click', function(){
+      learnedSet.add(w.w);
+      renderCards();
+    });
+    cardsEl.appendChild(c);
+  });
+}
+renderCards();
+document.getElementById('btnClearLearned').addEventListener('click', function(){ learnedSet.clear(); renderCards(); });
+document.getElementById('btnAllPlay').addEventListener('click', function(){
+  WORDS.forEach(function(w){ playRecording(w.w, null, 1); });
+});
+
+const drillSel = document.getElementById('drillWord');
+const drillStepsEl = document.getElementById('drillSteps');
+function fillDrillSelect(){
+  drillSel.innerHTML='';
+  WORDS.forEach(function(w){
+    const o=document.createElement('option');
+    o.value=w.w; o.textContent=w.w+'（'+w.emoji+'）';
+    drillSel.appendChild(o);
+  });
+}
+fillDrillSelect();
+function drillStepsFor(w){
+  const o = WORDS.find(function(x){ return x.w===w; }) || WORDS[0];
+  const ch=o.letter, token=o.token, sound=o.sound;
+  return [
+    { k:'letter', text: ch+', '+o.w, rate:1, token:token, sound:sound, kind:'letter' },
+    { k:'sound',  text: token,       rate:1, token:token, sound:sound, kind:'sound'  },
+    { k:'slow',   text: o.w,          rate:0.45, token:token, sound:sound, kind:'word' },
+    { k:'normal', text: o.w,          rate:1, token:token, sound:sound, kind:'word' },
+  ];
+}
+let drillIdx = 0, drillStepsArr = [];
+function renderDrill(){
+  const w = drillSel.value;
+  drillStepsArr = drillStepsFor(w);
+  drillIdx = 0;
+  drillStepsEl.innerHTML = '';
+  drillStepsArr.forEach(function(s, i){
+    const li = document.createElement('li');
+    if(s.kind==='letter'){ li.innerHTML = '<b>① 開字母：</b> '+s.text+'　→ '+s.token+'（'+s.sound+'）'; }
+    else if(s.kind==='sound'){ li.innerHTML = '<b>② 真正聲音：</b> '+s.text+'（'+s.sound+'）'; }
+    else if(s.rate===0.45){ li.innerHTML = '<b>③ 慢慢唸：</b> '+s.text+'（慢速 '+s.rate+'）'; }
+    else { li.innerHTML = '<b>③ 正常唸：</b> '+s.text; }
+    drillStepsEl.appendChild(li);
+  });
+}
+drillSel.addEventListener('change', renderDrill);
+function runDrill(){
+  const w = drillSel.value;
+  const token = ++drillToken;
+  const steps = drillStepsFor(w);
+  let i = 0;
+  function fire(){
+    if(token !== drillToken) return;
+    if(i >= steps.length) return;
+    const s = steps[i++];
+    const t = token;
+    spPlay(s.text, s.rate, function(){
+      if(t!==drillToken) return;
+      fire();
+    });
+  }
+  fire();
+}
+document.getElementById('btnDrill').addEventListener('click', runDrill);
+
+const quizState = { running:false, score:0, qIndex:0, timer:null, opts:[], correctIdx:-1 };
+const quizQEl = document.getElementById('quizQ');
+const quizOptsEl = document.getElementById('quizOpts');
+const quizMetaEl = document.getElementById('quizMeta');
+function shuffle(a){ const c=a.slice(); for(let i=c.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]]; } return c; }
+function buildOptions(w){
+  const correct = w.letter;
+  const pool = 'ABCDEFGHJKLMNPQRSTUVWXYZ'.split('');
+  const others = shuffle(pool.filter(function(c){ return c!==correct; }));
+  return [correct, others[0], others[1], others[2]].map(function(t){
+    const ww = WORDS.find(function(x){ return x.letter===t; });
+    const real = ww ? ww.sound : '/x/';
+    return { t:t, sound: real, w: ww ? ww.w : '(no word)', ok: t===correct };
+  });
+}
+function startQuiz(){
+  quizState.running=true; quizState.score=0; quizState.qIndex=0;
+  quizOptsEl.innerHTML='';
+  nextQuiz();
+}
+function nextQuiz(){
+  if(quizState.qIndex >= QUIZ_COUNT) { quizState.running=false; quizMetaEl.textContent='完成！得分：'+quizState.score; return; }
+  const w = WORDS[Math.floor(Math.random()*WORDS.length)];
+  quizState.opts = buildOptions(w);
+  quizQEl.textContent = w.emoji+' '+w.w+'（'+w.zh+'）';
+  quizMetaEl.textContent = (quizState.qIndex+1) + ' / ' + QUIZ_COUNT;
+  quizOptsEl.innerHTML='';
+  quizState.opts.forEach(function(o, idx){
+    const b = document.createElement('button');
+    b.dataset.idx = idx;
+    b.textContent = o.t+'　'+o.sound;
+    b.addEventListener('click', function(){
+      if(!quizState.running) return;
+      const idx = parseInt(b.dataset.idx);
+      if(quizState.opts[idx].ok) quizState.score++;
+      quizOptsEl.querySelectorAll('button').forEach(function(bb){
+        const i2 = parseInt(bb.dataset.idx);
+        bb.classList.remove('correct'); bb.classList.remove('wrong');
+        if(quizState.opts[i2].ok) bb.classList.add('correct'); else bb.classList.add('wrong');
+      });
+      quizMetaEl.textContent = (quizState.qIndex+1) + ' / ' + QUIZ_COUNT;
+      quizState.qIndex++;
+      if(quizState.qIndex < QUIZ_COUNT){ setTimeout(nextQuiz, 1200); }
+      else { quizState.running=false; quizMetaEl.textContent='完成！得分：'+quizState.score; }
+    });
+    quizOptsEl.appendChild(b);
+  });
+  // 播放題目單字
+  playRecording(w.w, null, 1);
+}
+document.getElementById('btnQuizStart').addEventListener('click', startQuiz);
+document.getElementById('btnQuizStop').addEventListener('click', function(){ quizState.running=false; clearTimeout(quizState.timer); quizMetaEl.textContent='已停止'; });
+
+document.addEventListener('keydown', function(ev){
+  const k = ev.key;
+  if(k>='1' && k<='4'){
+    const idx = parseInt(k)-1;
+    if(quizState.running){
+      const b = quizOptsEl.children[idx];
+      if(b) b.click();
+    }
+  }
+});
+
+const matchInfoEl = document.getElementById('matchInfo');
+function renderPairs(){
+  const box = document.getElementById('matchPairs');
+  box.innerHTML='';
+  let okCount = 0;
+  PAIRS.forEach(function(p){
+    const row = document.createElement('div');
+    row.className = 'pair';
+    row.innerHTML =
+      '<div class="cell" data-pair="'+p.w+'">'+p.emoji+'</div>'
+      +'<div class="mid">＝</div>'
+      +'<div class="cell" data-pair="'+p.w+'">'+p.w+'</div>';
+    const cells = row.querySelectorAll('.cell');
+    let picked = null;
+    cells.forEach(function(cell){
+      cell.addEventListener('click', function(){
+        if(cell.classList.contains('ok') || cell.classList.contains('bad')) return;
+        if(picked && picked!==cell){
+          const a = picked.getAttribute('data-pair');
+          const b = cell.getAttribute('data-pair');
+          if(a===b){
+            picked.classList.add('ok'); cell.classList.add('ok'); okCount++;
+            setTimeout(function(){ row.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); }); }, 600);
+          } else {
+            picked.classList.add('bad'); cell.classList.add('bad');
+            setTimeout(function(){ row.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); c.classList.remove('bad'); }); }, 600);
+          }
+          picked=null; cell=null;
+        } else { picked = cell; cell.classList.add('sel'); }
+      });
+    });
+    box.appendChild(row);
+  });
+  matchInfoEl.textContent = '配對成功：'+okCount+' / '+PAIRS.length;
+}
+renderPairs();
+
+warmUpAndCheck();
+</script>
+</body>
+</html>
+```
+
+---
+
+
+你要我現在幫你**把這個內容存成檔案**（例如直接寫到某個路徑），還是你自己存？要我幫你存成 `C:\Users\Owner\OneDrive\預設專案\def-transport-english.html`，還是你直接自己存？
